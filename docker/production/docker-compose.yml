@@ -1,0 +1,14 @@
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    env_file:
+      - .env
+    container_name: metrics-backend
+    ports:
+      - $SERVER_IP:3150:8080
+    logging:
+      driver: journald

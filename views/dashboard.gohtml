@@ -1,0 +1,58 @@
+{{- /*gotype: metrics-backend/dashboard.Table*/ -}}
+{{ block "dashboard" . }}
+    {{$dashboard := .}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Metrics Dashboard</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet"/>
+    </head>
+    <body class="px-6 py-6">
+    <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        Metrics Dashboard
+    </h1>
+
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                {{ range .Headers }}
+                    <th scope="col" class="px-6 py-3">
+                        {{ . }}
+                    </th>
+                {{ end }}
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{ range .Rows }}
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    {{ range .Values }}
+                        <td class="px-6 py-4">
+                            {{ . }}
+                        </td>
+                    {{ end }}
+                    <td class="px-6 py-4 {{ if .IsAlert }} bg-red-300 {{ end }}">
+                        {{ .State }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                hx-confirm="Really delete metric {{ .Host }} - {{ .Name }}?" hx-target="body"
+                                hx-post="/delete/{{ .Id }}">{{$dashboard.DeleteLabel}}
+                        </button>
+                    </td>
+                </tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    </body>
+    </html>
+{{ end }}

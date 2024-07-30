@@ -1,0 +1,8 @@
+POST http://localhost:8080/metric
+Content-Type: application/json
+
+{
+  "host": "mac",
+  "name": "testing",
+  "type": "ping"
+}
