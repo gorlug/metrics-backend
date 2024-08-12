@@ -15,3 +15,5 @@
 * [templates cheatsheet](https://docs.gofiber.io/template/next/html/TEMPLATES_CHEATSHEET)
 * https://flowbite.com/
 * [template layouts/inheritance](https://stackoverflow.com/a/69244593)
+* [Postgres Timescale DB](https://saiparvathaneni.medium.com/a-complete-guide-for-postgres-timescale-db-ae75a4d45b8d)
+  * [With Prisma](https://medium.com/geekculture/set-up-a-timescaledb-hypertable-with-prisma-9550652cfe97), [or this](https://gist.github.com/janpio/2a425f22673f2de54469772f16af8118)

@@ -11,4 +11,14 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./_postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
+
+  timescale-db:
+    image: timescale/timescaledb:latest-pg16
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: local
+    ports:
+      - 5433:5432
+    volumes:
+      - ./timescale-data:/var/lib/postgresql/data
