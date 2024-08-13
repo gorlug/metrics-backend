@@ -27,26 +27,28 @@ func newTemplate() *Templates {
 	}
 }
 
-func CreateRestApi(metricsService *DbMetricsService) {
+func CreateRestApi(metricsService *DbMetricsService, journalService *JournalLogService) {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Renderer = newTemplate()
 
-	api := NewApi(metricsService)
+	api := NewApi(metricsService, journalService)
 
 	e.POST("/metric", api.createMetric)
 	e.GET("/dashboard", api.ShowDashboard)
 	e.POST("/delete/:id", api.DeleteMetric)
+	e.POST("/journal", api.PostJournal)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
 type Api struct {
 	metricsService *DbMetricsService
+	journalService *JournalLogService
 }
 
-func NewApi(metricsService *DbMetricsService) *Api {
-	return &Api{metricsService: metricsService}
+func NewApi(metricsService *DbMetricsService, journalService *JournalLogService) *Api {
+	return &Api{metricsService: metricsService, journalService: journalService}
 }
 
 func (a *Api) createMetric(c echo.Context) error {
@@ -100,4 +102,25 @@ func (a *Api) DeleteMetric(c echo.Context) error {
 		return err
 	}
 	return a.ShowDashboard(c)
+}
+
+type JournalBody struct {
+	Logs string `json:"logs"`
+}
+
+func (a *Api) PostJournal(c echo.Context) error {
+	var journalBody JournalBody
+	err := c.Bind(&journalBody)
+	if err != nil {
+		log.Println("failed to parse journal logs body", err)
+		return err
+	}
+
+	err = a.journalService.SaveJournalLogs(journalBody.Logs)
+
+	if err != nil {
+		log.Println("failed to save journal logs", err)
+		return err
+	}
+	return nil
 }

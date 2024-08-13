@@ -26,6 +26,10 @@ func main() {
 	CheckError(err)
 	defer metricsService.Close()
 
+	journalLogService, err := metrics.NewJournalLogService(os.Getenv("TIMESCALE_DATABASE_URL"))
+	CheckError(err)
+	defer journalLogService.Close()
+
 	alertChecker := metrics.NewAlertChecker(metricsService, telegramAlerter)
 	alertChecker.CheckAlerts()
 
@@ -39,7 +43,7 @@ func main() {
 	cronSpec.Start()
 	defer cronSpec.Stop()
 
-	rest.CreateRestApi(metricsService)
+	rest.CreateRestApi(metricsService, journalLogService)
 }
 
 func CheckError(err error) {
