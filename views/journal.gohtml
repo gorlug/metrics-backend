@@ -1,0 +1,113 @@
+{{- /*gotype: metrics-backend/journal.JournalTable*/ -}}
+{{ block "journal" . }}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Journal logs</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet"/>
+    </head>
+    <body class="px-6 py-6">
+    <h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        Journal Logs
+    </h1>
+    <form
+            hx-get="{{.NextUrl}}" hx-target="body"
+            hx-swap="innerhtml show:body:top"
+            hx-push-url="true"
+    >
+        <div class="flex flex-wrap">
+            {{ template "dateTimePicker" .StartInput }}
+            {{ template "dateTimePicker" .EndInput }}
+            <div class="pr-5 self-center">
+                <label for="first_name"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Page
+                </label>
+                <input type="text" id="first_name"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       name="pageSize" min="1" max="200"
+                       value="{{.PageSize}}"/>
+            </div>
+            <div class="pr-5 self-center">
+                <label for="first_name"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Container
+                </label>
+                <input type="text" id="first_name"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       name="container"
+                       value="{{.Container}}"/>
+            </div>
+            <div class="pr-5 self-center">
+                <label for="first_name"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Host
+                </label>
+                <input type="text" id="first_name"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       name="container"
+                       value="{{.Host}}"/>
+            </div>
+        </div>
+        <div>
+            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Container message
+                filter</label>
+            <textarea id="message" rows="2"
+                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      name="filter"
+                      placeholder="Message regex">{{.Filter}}</textarea>
+        </div>
+        <input type="hidden" id="timezone" name="timezone" value="Europe/Berlin"/>
+        <input type="hidden" name="page">
+        <div class="pt-5">
+            <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    type="submit"
+            >
+                Apply range
+            </button>
+        </div>
+
+        <div class="pt-5">
+            {{ template "paginationButton" .PreviousButton }}
+
+            {{ template "paginationButton" .NextButton }}
+        </div>
+
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    {{ range .Headers }}
+                        <th scope="col" class="px-6 py-3">
+                            {{ . }}
+                        </th>
+                    {{ end }}
+                </tr>
+                </thead>
+                <tbody>
+                {{ range .Rows }}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        {{ range . }}
+                            <td class="px-6 py-4">
+                                {{ . }}
+                            </td>
+                        {{ end }}
+                    </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </div>
+        <div class="pt-5">
+            {{ template "paginationButton" .PreviousButton }}
+
+            {{ template "paginationButton" .NextButton }}
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    </body>
+    </html>
+{{ end }}

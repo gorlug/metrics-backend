@@ -5,9 +5,11 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 	"log"
+	"metrics-backend/journal"
 	"metrics-backend/metrics"
 	"metrics-backend/rest"
 	"os"
+	_ "time/tzdata"
 )
 
 func main() {
@@ -26,9 +28,19 @@ func main() {
 	CheckError(err)
 	defer metricsService.Close()
 
-	journalLogService, err := metrics.NewJournalLogService(os.Getenv("TIMESCALE_DATABASE_URL"))
-	CheckError(err)
-	defer journalLogService.Close()
+	var journalService *journal.JournalLogService
+	timescaleDbUrl := os.Getenv("TIMESCALE_DATABASE_URL")
+	if timescaleDbUrl != "" {
+		logService, err := journal.NewJournalLogService(timescaleDbUrl)
+		if err != nil {
+			log.Printf("Journal service is disabled: %v", err)
+		} else {
+			log.Print("Journal service is enabled")
+		}
+		CheckError(err)
+		journalService = logService
+		defer logService.Close()
+	}
 
 	alertChecker := metrics.NewAlertChecker(metricsService, telegramAlerter)
 	alertChecker.CheckAlerts()
@@ -43,7 +55,7 @@ func main() {
 	cronSpec.Start()
 	defer cronSpec.Stop()
 
-	rest.CreateRestApi(metricsService, journalLogService)
+	rest.CreateRestApi(metricsService, journalService)
 }
 
 func CheckError(err error) {

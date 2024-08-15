@@ -53,7 +53,6 @@ on conflict ("host", "name") do update
         type      = $4,
         value     = $5
 `
-	log.Printf("save metric insert %v", insertDynStmt)
 	_, e := s.connPool.Exec(context.Background(), insertDynStmt, metric.Host, metric.Name, metric.Timestamp, metric.Type, metric.Value, OK)
 	return e
 }
