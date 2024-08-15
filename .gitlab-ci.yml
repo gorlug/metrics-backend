@@ -36,12 +36,16 @@ deploy-server-1:
   tags:
     - couchdb-1
   stage: deploy
-  only:
-    - main
+#   only:
+#     - main
   dependencies:
     - compile
   script:
     - cp $ENV_FILE .env
+    - cp .env timescale/
+    - cd timescale
+    - ./executeSql.sh
+    - cd ..
     - ./deploy.sh
 
 deploy-server-2:

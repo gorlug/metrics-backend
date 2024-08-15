@@ -1,12 +1,14 @@
 package rest
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"html/template"
 	"io"
 	"log"
 	"metrics-backend/dashboard"
+	. "metrics-backend/journal"
 	. "metrics-backend/metrics"
 	"net/http"
 	"strconv"
@@ -37,7 +39,11 @@ func CreateRestApi(metricsService *DbMetricsService, journalService *JournalLogS
 	e.POST("/metric", api.createMetric)
 	e.GET("/dashboard", api.ShowDashboard)
 	e.POST("/delete/:id", api.DeleteMetric)
-	e.POST("/journal", api.PostJournal)
+	log.Printf("journal service: %v", journalService)
+	if journalService != nil {
+		e.GET("/journal", api.ShowJournal)
+		e.POST("/journal", api.PostJournal)
+	}
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -123,4 +129,52 @@ func (a *Api) PostJournal(c echo.Context) error {
 		return err
 	}
 	return nil
+}
+
+func (a *Api) ShowJournal(c echo.Context) error {
+	start := c.QueryParam("start")
+	end := c.QueryParam("end")
+	timezone := c.QueryParam("timezone")
+	page := c.QueryParam("page")
+	pageSize := c.QueryParam("pageSize")
+
+	renderData := &JournalRenderData{
+		Start:     ParseTime(start, 0, timezone),
+		End:       ParseTime(end, 10, timezone),
+		Page:      parseIntWithDefault(page, 1),
+		PageSize:  parseIntWithDefault(pageSize, 10),
+		Container: c.QueryParam("container"),
+		Host:      c.QueryParam("host"),
+		Filter:    c.QueryParam("filter"),
+	}
+
+	return NewJournalView(a.journalService).Render(c, renderData)
+}
+
+func ParseTime(timeString string, durationDifference int, timezone string) time.Time {
+	if timezone == "" {
+		timezone = "Europe/Berlin"
+	}
+	location, err := time.LoadLocation(timezone)
+	if err != nil {
+		println(fmt.Sprintf("failed to load location %v, error: %v", timezone, err))
+		location = time.Local
+	}
+	timeObject, err := time.Parse("2006-01-02T15:04", timeString)
+	if err == nil {
+		timeObject, err = time.ParseInLocation("2006-01-02T15:04", timeString, location)
+	}
+	if err != nil {
+		timeObject = time.Now().Add(time.Duration(-1) * time.Hour)
+		timeObject = timeObject.Add(time.Duration(durationDifference) * time.Minute)
+	}
+	return timeObject
+}
+
+func parseIntWithDefault(pageString string, defaultValue int) int {
+	page, err := strconv.Atoi(pageString)
+	if err != nil {
+		return defaultValue
+	}
+	return page
 }
