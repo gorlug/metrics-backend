@@ -205,7 +205,7 @@ func (s *JournalLogService) GetLogPage(data *LogPageData) ([]LogsEntry, error) {
 		},
 	)
 	if data.ContainerName != "" {
-		and = and.Append(goqu.L("log->>'_CONTAINER_NAME'").Eq(data.ContainerName))
+		and = and.Append(goqu.L("log->>'CONTAINER_NAME'").Eq(data.ContainerName))
 	}
 	if data.Hostname != "" {
 		and = and.Append(goqu.L("log->>'_HOSTNAME'").Eq(data.Hostname))
