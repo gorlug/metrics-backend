@@ -15,7 +15,7 @@ type MetricsService interface {
 }
 
 type DbMetricsService struct {
-	connPool *pgxpool.Pool
+	ConnPool *pgxpool.Pool
 }
 
 func NewDBMetricsService(dbUrl string, alerter Alerter) (*DbMetricsService, error) {
@@ -41,7 +41,7 @@ func NewDBMetricsService(dbUrl string, alerter Alerter) (*DbMetricsService, erro
 
 	fmt.Println("Connected to the database!!")
 
-	return &DbMetricsService{connPool: connPool}, nil
+	return &DbMetricsService{ConnPool: connPool}, nil
 }
 
 func (s *DbMetricsService) SaveMetric(metric MetricValues) error {
@@ -53,7 +53,7 @@ on conflict ("host", "name") do update
         type      = $4,
         value     = $5
 `
-	_, e := s.connPool.Exec(context.Background(), insertDynStmt, metric.Host, metric.Name, metric.Timestamp, metric.Type, metric.Value, OK)
+	_, e := s.ConnPool.Exec(context.Background(), insertDynStmt, metric.Host, metric.Name, metric.Timestamp, metric.Type, metric.Value, OK)
 	return e
 }
 
@@ -61,12 +61,12 @@ func (s *DbMetricsService) SaveState(metric MetricValues, state MetricState) err
 	insertDynStmt := `
 update "metric" set state = $1 where host = $2 and name = $3;
 `
-	_, e := s.connPool.Exec(context.Background(), insertDynStmt, state, metric.Host, metric.Name)
+	_, e := s.ConnPool.Exec(context.Background(), insertDynStmt, state, metric.Host, metric.Name)
 	return e
 }
 
 func (s *DbMetricsService) GetAllMetrics() ([]Metric, error) {
-	rows, err := s.connPool.Query(context.Background(), `select host, name, timestamp, type, value, state, id from metric
+	rows, err := s.ConnPool.Query(context.Background(), `select host, name, timestamp, type, value, state, id from metric
 order by state desc, host, name 
 `)
 	if err != nil {
@@ -88,11 +88,11 @@ order by state desc, host, name
 }
 
 func (s *DbMetricsService) Close() {
-	s.connPool.Close()
+	s.ConnPool.Close()
 }
 
 func (s *DbMetricsService) DeleteMetric(id int) error {
 	deleteDynStmt := `delete from "metric" where id = $1`
-	_, e := s.connPool.Exec(context.Background(), deleteDynStmt, id)
+	_, e := s.ConnPool.Exec(context.Background(), deleteDynStmt, id)
 	return e
 }

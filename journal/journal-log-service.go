@@ -10,7 +10,6 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
-	. "metrics-backend/logger"
 	"metrics-backend/metrics"
 	"strconv"
 	"strings"
@@ -232,8 +231,6 @@ func (s *JournalLogService) GetLogPage(data *LogPageData) ([]LogsEntry, error) {
 		}).
 		Limit(uint(data.Limit)).
 		ToSQL()
-
-	LogDebug("sql: %s, args: %s", sql, args)
 
 	rows, err := s.connPool.Query(context.Background(), sql, args...)
 

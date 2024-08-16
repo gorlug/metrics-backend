@@ -8,6 +8,7 @@ import (
 	"metrics-backend/journal"
 	"metrics-backend/metrics"
 	"metrics-backend/rest"
+	"metrics-backend/user"
 	"os"
 	_ "time/tzdata"
 )
@@ -42,6 +43,9 @@ func main() {
 		defer logService.Close()
 	}
 
+	userService, err := user.NewUserService(metricsService.ConnPool)
+	CheckError(err)
+
 	alertChecker := metrics.NewAlertChecker(metricsService, telegramAlerter)
 	alertChecker.CheckAlerts()
 
@@ -55,7 +59,7 @@ func main() {
 	cronSpec.Start()
 	defer cronSpec.Stop()
 
-	rest.CreateRestApi(metricsService, journalService)
+	rest.CreateRestApi(metricsService, journalService, userService)
 }
 
 func CheckError(err error) {

@@ -36,8 +36,8 @@ deploy-server-1:
   tags:
     - couchdb-1
   stage: deploy
-#   only:
-#     - main
+  only:
+    - main
   dependencies:
     - compile
   script:
