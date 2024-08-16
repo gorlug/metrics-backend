@@ -18,3 +18,4 @@
 * [Postgres Timescale DB](https://saiparvathaneni.medium.com/a-complete-guide-for-postgres-timescale-db-ae75a4d45b8d)
   * [With Prisma](https://medium.com/geekculture/set-up-a-timescaledb-hypertable-with-prisma-9550652cfe97), [or this](https://gist.github.com/janpio/2a425f22673f2de54469772f16af8118)
 * https://www.haatos.com/articles/google-authentication-with-goth-in-golang
+* [Google OAuth API keys](https://console.cloud.google.com/apis/credentials)
