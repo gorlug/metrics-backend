@@ -157,7 +157,7 @@ func (j *JournalView) CreateJournalTable(data *JournalRenderData) (*JournalTable
 	for _, logEntry := range journalLogs {
 		var logValue string
 		if data.Container != "" {
-			logValue = logEntry.Log["MESSAGE"]
+			logValue = fmt.Sprint(logEntry.Log["MESSAGE"])
 		} else {
 			jsonObject, err := json.Marshal(logEntry.Log)
 			if err != nil {
@@ -168,7 +168,7 @@ func (j *JournalView) CreateJournalTable(data *JournalRenderData) (*JournalTable
 		}
 		rowContent := []string{logEntry.Time.In(location).Format("15:04:05.000 02.01.2006"), logValue}
 		if data.Container != "" {
-			rowContent = append(rowContent, logEntry.Log["_HOSTNAME"])
+			rowContent = append(rowContent, fmt.Sprint(logEntry.Log["_HOSTNAME"]))
 		}
 		table.Rows = append(table.Rows, rowContent)
 

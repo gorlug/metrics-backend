@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
+	"metrics-backend/logger"
 	"metrics-backend/metrics"
 	"strconv"
 	"strings"
@@ -33,7 +34,7 @@ type LogsEntry struct {
 	Id     int
 	Time   time.Time
 	Hash   string
-	Log    map[string]string
+	Log    map[string]any
 	TimeId int
 }
 
@@ -137,16 +138,16 @@ func ParseJournalLogs(logs string) []*LogsEntry {
 			continue
 		}
 		logLine = strings.ReplaceAll(logLine, "\n", "\\n")
-		logMap := map[string]string{}
+		logMap := map[string]any{}
 		err := json.Unmarshal([]byte(logLine), &logMap)
 		if err != nil {
-			log.Printf("Error while unmarshalling log: %v, line: %v", err, logLine)
+			logger.LogError("Error while unmarshalling log: %v, line: %v", err, logLine)
 			continue
 		}
 		timestampString := logMap["__REALTIME_TIMESTAMP"]
-		timestampInt, err := strconv.ParseInt(timestampString, 10, 64)
+		timestampInt, err := strconv.ParseInt(fmt.Sprint(timestampString), 10, 64)
 		if err != nil {
-			log.Printf("Error while converting timestamp to int: %v, logLine: %v", err, logLine)
+			logger.LogError("Error while converting timestamp to int: %v, logLine: %v", err, logLine)
 			continue
 		}
 		timestamp := time.UnixMicro(timestampInt).In(location)
