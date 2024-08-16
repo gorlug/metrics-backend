@@ -22,43 +22,17 @@
             {{ template "dateTimePicker" .StartInput }}
             {{ template "dateTimePicker" .EndInput }}
             <div class="pr-5 self-center">
-                <label for="first_name"
-                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Page
-                </label>
-                <input type="text" id="first_name"
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                       name="pageSize" min="1" max="200"
-                       value="{{.PageSize}}"/>
+                {{ template "textInput" .PageSize }}
             </div>
             <div class="pr-5 self-center">
-                <label for="first_name"
-                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Container
-                </label>
-                <input type="text" id="first_name"
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                       name="container"
-                       value="{{.Container}}"/>
+                {{ template "textInput" .Container }}
             </div>
             <div class="pr-5 self-center">
-                <label for="first_name"
-                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Host
-                </label>
-                <input type="text" id="first_name"
-                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                       name="host"
-                       value="{{.Host}}"/>
+                {{ template "textInput" .Host }}
             </div>
         </div>
         <div>
-            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Container message
-                filter</label>
-            <textarea id="message" rows="2"
-                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      name="filter"
-                      placeholder="Message regex">{{.Filter}}</textarea>
+            {{ template "textInput" .Filter }}
         </div>
         <input type="hidden" id="timezone" name="timezone" value="Europe/Berlin"/>
         <input type="hidden" name="page">

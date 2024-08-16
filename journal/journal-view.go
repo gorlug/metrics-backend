@@ -20,11 +20,17 @@ func formatDateRangeInputTimeStamp(time time.Time) string {
 }
 
 type PaginationButton struct {
-	Shown bool
-	Url   string
-	Page  int
+	Enabled bool
+	Url     string
+	Page    int
+	Label   string
+	Name    string
+}
+
+type TextInput struct {
 	Label string
 	Name  string
+	Value string
 }
 
 type JournalTable struct {
@@ -33,12 +39,12 @@ type JournalTable struct {
 	NextUrl        string
 	StartInput     *DateRangeInput
 	EndInput       *DateRangeInput
-	PageSize       int
 	PreviousButton *PaginationButton
 	NextButton     *PaginationButton
-	Container      string
-	Host           string
-	Filter         string
+	PageSize       *TextInput
+	Container      *TextInput
+	Host           *TextInput
+	Filter         *TextInput
 }
 
 type JournalView struct {
@@ -111,24 +117,40 @@ func (j *JournalView) CreateJournalTable(data *JournalRenderData) (*JournalTable
 			Name:      "end",
 			Label:     "End",
 		},
-		PageSize: data.PageSize,
 		NextButton: &PaginationButton{
-			Shown: nextPage != data.Page,
-			Url:   journalUrl,
-			Page:  nextPage,
-			Label: "Next",
-			Name:  "next",
+			Enabled: nextPage != data.Page,
+			Url:     journalUrl,
+			Page:    nextPage,
+			Label:   "Next",
+			Name:    "next",
 		},
 		PreviousButton: &PaginationButton{
-			Shown: data.Page != 1,
-			Url:   journalUrl,
-			Page:  previousPage,
-			Label: "Previous",
-			Name:  "previous",
+			Enabled: data.Page != 1,
+			Url:     journalUrl,
+			Page:    previousPage,
+			Label:   "Previous",
+			Name:    "previous",
 		},
-		Container: data.Container,
-		Host:      data.Host,
-		Filter:    data.Filter,
+		PageSize: &TextInput{
+			Label: "Page Size",
+			Name:  "pageSize",
+			Value: fmt.Sprint(data.PageSize),
+		},
+		Container: &TextInput{
+			Label: "Container",
+			Name:  "container",
+			Value: data.Container,
+		},
+		Host: &TextInput{
+			Label: "Host",
+			Name:  "host",
+			Value: data.Host,
+		},
+		Filter: &TextInput{
+			Label: "Container message filter",
+			Name:  "filter",
+			Value: data.Filter,
+		},
 	}
 	log.Printf("next url: %v", table.NextUrl)
 
