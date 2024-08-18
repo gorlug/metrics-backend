@@ -1,5 +1,13 @@
 # Metrics Backend
 
+## Motivation
+
+Having alerts when you're running your own infrastructure is important. Otherwise, how can you know if it is not running anymore.
+
+In the past I used to run an Elasticsearch cluster on my own. The Servers would send their metrics to it and via Kibana I set up alerts for certain metrics like "container isn't running", "disk is full". I used Elasticsearch also as a small JSON database. But maintaining and updating an Elasticsearch cluster is quite time-consuming. 
+
+Next I used AWS Cloudwatch metrics for this purpose. I built a small Cli in Dart myself that
+
 ## Sources
 
 * [Interfaces](https://www.digitalocean.com/community/tutorials/how-to-use-interfaces-in-go)
