@@ -1,4 +1,4 @@
-module metrics-backend
+module github.com/gorlug/metrics-backend
 
 go 1.22
 
