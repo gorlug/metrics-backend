@@ -97,7 +97,7 @@ from the `docker-compose.yml` file.
 
 ## Usage
 
-There isn't much to do. The [metrics-sender] Cli is the main way to configure what is sent to the server.
+There isn't much to do. The [metrics-sender](https://github.com/gorlug/metrics-sender) Cli is the main way to configure what is sent to the server.
 
 If a metric turns into an alert, a message is sent to the Telegram bot. If the alert is resolved, another message is sent.
 
@@ -141,7 +141,7 @@ Finally, I started watching more of ThePrimagen and he was hyping Go and HTMX so
 
 ## Metrics
 
-A Webserver runs that takes metrics POST requests from clients. These use the [metrics-sender] Cli tool that I also wrote to send the metrics.
+A Webserver runs that takes metrics POST requests from clients. These use the [metrics-sender](https://github.com/gorlug/metrics-sender) Cli tool that I also wrote to send the metrics.
 
 The metrics look like this:
 
