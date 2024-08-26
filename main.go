@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorlug/metrics-backend/journal"
+	"github.com/gorlug/metrics-backend/metrics"
+	"github.com/gorlug/metrics-backend/rest"
+	"github.com/gorlug/metrics-backend/user"
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 	"log"
-	"metrics-backend/journal"
-	"metrics-backend/metrics"
-	"metrics-backend/rest"
-	"metrics-backend/user"
 	"os"
 	_ "time/tzdata"
 )

@@ -1,9 +1,9 @@
 package dashboard
 
 import (
+	. "github.com/gorlug/metrics-backend/metrics"
 	"github.com/labstack/echo/v4"
 	"log"
-	. "metrics-backend/metrics"
 	"net/http"
 	"strconv"
 )
