@@ -135,9 +135,9 @@ In the past I used to run an Elasticsearch cluster on my own. The Servers would 
 
 Next I used AWS Cloudwatch metrics for this purpose. I built a small Cli in Dart that sent the metrics I was interested in to Cloudwatch. Cloudwatch was that configured to alert me if certain thresholds were reached. Now I didn't have to maintain the Elasticsearch cluster.
 
-I realized that the metrics and alerts are not as cheap as I thought. Still cheap, but I was like "I could save that money but building something simple myself". Of course there is always the pitfall that it takes way too much time.
+I realized that the metrics and alerts are not as cheap as I thought. Still cheap, but I was like "I could save that money by building something simple myself". Of course there is always the pitfall that it takes way too much time.
 
-Finally, I started watching more of ThePrimagen and he was hyping Go and HTMX so much that I wanted to try it out for myself. So I thought this metrics idea would be a first good project to start with. It is not too simple, because it involves a Database, a Cron Job and a Webserver. But also not overly complicated, the actual business logic is quite simple.
+Finally, I started watching more of ThePrimeagen and he was hyping Go and HTMX so much that I wanted to try it out for myself. So I thought this metrics idea would be a first good project to start with. It is not too simple, because it involves a Database, a Cron Job and a Webserver. But also not overly complicated, the actual business logic is quite simple.
 
 ## Metrics
 
@@ -206,11 +206,11 @@ Then I realized I have a bunch of testing metrics that were left over from devel
 
 ### Choosing a database
 
-I had been previously using ElasticSearch also for viewing logs from systemd journal. I lost that when I switched to Cloudwatch Metrics and didn't set up that to maybe forward it to Cloudwatch as well.
+I had been previously using ElasticSearch also for viewing logs from systemd journal. I lost that when I switched to Cloudwatch Metrics and didn't set that up to forward it to Cloudwatch as well.
 
 On my journey developing the metrics, HTMX seemed so easy I felt like maybe I can implement something simple myself.
 
-A first hurdle was where to store it. My first thought was using Postgres as well, but that would be a lot of data. I thought about using some other database, but I didn't want to have to set up something new.
+The first hurdle was where to store it. My first thought was using Postgres as well, but that would be a lot of data. I thought about using some other database, but I didn't want to have to set up something new.
 
 Luckily I discovered the [timescale](https://www.timescale.com/) extension for Postgres which is optimized for time series data and has automatic deletion of time series data. Now that sounds exactly like what I've been looking for. Because it is Postgres it is super easy to set up. I went with using a separate database because I didn't want to clutter my actual production database with a bunch of logs. If I lose the timescale db it isn't a big deal.
 
@@ -224,7 +224,7 @@ But Prisma lacked the functionality to set up the timescale extension. For that 
 
 ### Implementation
 
-On the backend I added another schema for the time series log data. A separate table view lets you browse all the logs using pagination. You can filter by start and end time, Docker container name and host name. 
+On the backend I added another schema for the time series log data. A separate HTML table view lets you browse all the logs using pagination. You can filter by start and end time, Docker container name and host name. 
 
 A POST "/journal" route was added to retrieve journal logs sent by the `metrics-sender` client. The `metrics-sender` was also extended to send the journal logs.
 
